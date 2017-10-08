@@ -7,10 +7,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import os.path
 import logging
 
-#cwd = os.getcwd()
-# add filemode="w" to overwrite
-#/c/Users/Dzmitry/PycharmProjects/todo-api
-#log_file = os.path.join( "C:", "Users", "Dzmitry", "PycharmProjects","todo-api","turo_parse7_log.log" )
+#add generic log file location and name
 logging.basicConfig(filename='turotask_minivans.log', filemode="w", level=logging.INFO,format='%(asctime)s %(message)s')
     #Logging usage example:
     #logging.debug("This is a debug message")
@@ -35,14 +32,13 @@ def driver_set():
     driver = webdriver.PhantomJS(desired_capabilities=dcap)  # PhantomJs should be in the same dir of python.py file within project
     driver.set_window_size(1920,1080)
     return driver
-#browser.maximize_window()
-#url = "https://turo.com/"   #consider URL:  https://turo.com/rentals/minivans   or similar for other types
 
 driver = driver_set()
 
 # car_types: SUVS, MINIVANS, CARS.
 # to search only for regular cars, excluding suvs and minivans, need to apply filter on web page, instead of just
 # specifying url with /cars...
+# add url and html objects for /cars only search results
 
 def navigate_to_url(car_type, city):
     url = "https://turo.com/rentals/%s/" % car_type
@@ -75,7 +71,8 @@ def navigate_to_url(car_type, city):
                 #all_cars[0].prettify()
 #https://turo.com/search?type=10&location=Chicago%2C%20IL%2C%20USA&country=US&region=IL&locationType=City&models=&makes=&fromYear=0&startDate=06%2F27%2F2017&startTime=10%3A00&endDate=07%2F04%2F2017&endTime=10%3A00&category=ALL&instantBook=false&customDelivery=false&maximumDistanceInMiles=30&sortType=RELEVANCE&isMapSearch=false&latitude=41.8781136&longitude=-87.6297982&defaultZoomLevel=11
 
-#TODO: consider user input as: Type of Car(minivan, suv, regular), City, Start Date and End Date.  ??? use above url as a base having user inputs as a parameters...?
+#TODO: consider user input as: Type of Car(minivan, suv, **regular), City, Start Date and End Date.
+# ??? use above url as a base having user inputs as a parameters...?
 
 url_now = navigate_to_url('minivans', 'Chicago')
 
@@ -129,8 +126,6 @@ def parse_data():
         year_list.append(i.span.get_text())
         model = i.p.get_text()
         make_list.append(i.p.get_text())
-                #TODO good example of getting data and saving it:
-        #  http://stackoverflow.com/questions/31060396/writing-and-saving-csv-file-from-scraping-data-using-python-and-beautifulsoup4
 
     prices = soup.find_all('p', {'class': 'vehicleWithDetails-value'}) # different element for pricess, couldn't get_text from all_cars
     price_list = []     # Prices
@@ -220,5 +215,7 @@ def future_url():
 # https://github.com/ianibo/SirsiDynixIBistroScraper/blob/master/scraper.py
 
 #TODO: search on diff timelines: a week ahead, a month ahead, 6 months ahead
+#TODO: when future dates function is ready, decouple main functions from iterations(each week, each car type, etc),
+#  create logs for each iteration.
 
 
