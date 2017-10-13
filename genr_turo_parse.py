@@ -40,7 +40,7 @@ driver = driver_set()
 # specifying url with /cars...
 # add url and html objects for /cars only search results
 
-def navigate_to_url(car_type, city):
+def navigate_to_base_url(car_type, city):
     url = "https://turo.com/rentals/%s/" % car_type
     driver.get(url)
     driver.implicitly_wait(3)
@@ -74,9 +74,10 @@ def navigate_to_url(car_type, city):
 #TODO: consider user input as: Type of Car(minivan, suv, **regular), City, Start Date and End Date.
 # ??? use above url as a base having user inputs as a parameters...?
 
-url_now = navigate_to_url('minivans', 'Chicago')
+url_now = navigate_to_base_url('minivans', 'Chicago')
 
 logging.info("Cleaning and parsing dates from URL")
+
 def cln_dates(url_now):
     url_lst = url_now.split("&")
     for s in url_lst:
