@@ -6,6 +6,7 @@ from random import choice
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import os.path
 import logging
+import pandas as pd
 
 #add generic log file location and name
 logging.basicConfig(filename='turotask_minivans.log', filemode="w", level=logging.INFO,format='%(asctime)s %(message)s')
@@ -159,7 +160,7 @@ def parse_data():   # add argument url_now
         'price' : price_list_fl
     }
 
-    import pandas as pd
+
 
     df = pd.DataFrame(data)
     df = df[['car_id','links','year','make','price','search_start_dt','search_end_dt','publn_dt']]  #changing order of DF
@@ -218,7 +219,7 @@ def date_repl_url():
 def future_url():
     # 1. add 7 days to start and end dt
     # 2. substitute dates in URL
-    # 3. run all the rutine again.
+    # 3. run all the routine again.
         # convert Dates like this:
         # startDate=05%2F11%2F2017        and      endDate=05%2F18%2F2017
         # a = u'06-27-2017'
