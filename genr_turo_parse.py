@@ -102,7 +102,7 @@ def cln_dates(url_now):
         # a17 = a1 + datetime.timedelta(days=7)
         # a17s = datetime.datetime.strftime(a17,"%m-%d-%Y")
 
-def parse_data():
+def parse_data():   # add argument url_now
     #driver = driver_set()
     soup = BeautifulSoup(driver.page_source, "html.parser")
     #driver.close()
@@ -194,9 +194,26 @@ def write_file(df):
 data = write_file(df)
 print('Job is done for one iteration')
 
-def dates_in_scope(todays_date):
-    # make a list of future start/end dates for 6 month ahead
-    pass
+# calculating future dates from the url_now
+s, e = cln_dates(url_now)
+s_dt = datetime.datetime.strptime(s, "%m-%d-%Y") #convert to date format from string
+e_dt_in6m = datetime.timedelta(days = 7 *26)   # start date in url in 6 months(26 weeks)
+
+def timespan(s_dt, e_dt_in6m, delta=datetime.timedelta(days=7)): #returns dates for 6 months ahead
+    curr_dt_plus7 = s_dt + datetime.timedelta(days = 7)     # first search date for a week ahead
+    while curr_dt_plus7 < e_dt_in6m:
+        yield curr_dt_plus7
+        curr_dt_plus7 += delta
+
+#for day in timespan(s_dt, e_dt_in6m, delta=datetime.timedelta(days=7)):
+    #url_coll =
+    # print day
+
+def date_repl_url():
+    for day in timespan(s_dt, e_dt_in6m, delta=datetime.timedelta(days=7)):
+        url_coll = []
+        s_dt_str = datetime.datetime.strftime(day, '%m-%d-%Y')
+        s_dt_str_url = s_dt_str.replace('-', '%2F')
 
 def future_url():
     # 1. add 7 days to start and end dt
