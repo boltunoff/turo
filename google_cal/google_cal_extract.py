@@ -78,7 +78,7 @@ def create_raw_extract_csv():
         writer.writeheader()
         writer.writerows(events_data)
 
-    print("File writing completed")
+    print("Raw Extract writing completed")
 
     csvFile.close()
     print("::: Raw calendar extract is done")
@@ -137,10 +137,11 @@ def create_excel_report():
             df_name = v
             df_name.to_excel(writer, sheet_name, index=False)
     writer.save()
-    print("::: Excel report is done")
+    print("::: Excel report is done: calendar_by_car_report.xlsx")
 
 if __name__ == '__main__':
-    #create_raw_extract_csv()
+    create_raw_extract_csv()
+    #TODO: complete funtion read_raw_csv_parse_turo_reservation
     #read_raw_csv_parse_turo_reservation_details()
     create_excel_report()
 
