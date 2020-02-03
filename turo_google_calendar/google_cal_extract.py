@@ -1,4 +1,8 @@
 
+# https://developers.google.com/people/quickstart/python
+# authorize w/o browser:
+#  https://stackoverflow.com/questions/46457093/google-drive-api-with-python-from-serverbackend-without-browser-autentication
+
 # Step1
 # pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
 from __future__ import print_function
@@ -10,11 +14,26 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 import csv
+import pytz
+from dateutil import parser
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
-def create_raw_extract_csv():
+
+def convert_timezone(utc_time_str):
+    """
+    Converts dates from Google Calendar ApI in UTC to Central time to match iPass time zone
+    :param utc_time_str:
+    :return:
+    """
+    utc_time_date = parser.parse(utc_time_str)
+    utc_time_date.replace(tzinfo=pytz.timezone("UTC"))
+    central_datetime = utc_time_date.astimezone(pytz.timezone("US/Central"))
+    central_datetime_str = central_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    return central_datetime_str
+
+def create_raw_calendar_extract_csv():
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -62,12 +81,18 @@ def create_raw_extract_csv():
         print(type(event))
         print('One event >>>\n', event)
         events_dict = {}
-        events_dict['start'] = event['start'].get('dateTime', event['start'].get('date'))
-        events_dict['end'] = event['end'].get('dateTime', event['end'].get('date'))
+
+        utc_start = event['start'].get('dateTime', event['start'].get('date'))
+        utc_end = event['end'].get('dateTime', event['end'].get('date'))
+        cst_start = convert_timezone(utc_start)
+        cst_end = convert_timezone(utc_end)
+
+        events_dict['start'] = cst_start
+        events_dict['end'] = cst_end
         events_dict['summary'] = event['summary']
         events_dict['description'] = event['description']
-        events_dict['created'] = event['created']
-        events_dict['updated'] = event['updated']
+        events_dict['created'] = convert_timezone(event['created'])
+        events_dict['updated'] = convert_timezone(event['updated'])
         events_data.append(events_dict)
         # print(start, end, summary, description, created, updated)
         #break
@@ -140,10 +165,10 @@ def create_excel_report():
     print("::: Excel report is done: calendar_by_car_report.xlsx")
 
 if __name__ == '__main__':
-    create_raw_extract_csv()
-    #TODO: complete funtion read_raw_csv_parse_turo_reservation
+    create_raw_calendar_extract_csv()
+    #TODO: complete function read_raw_csv_parse_turo_reservation
     #read_raw_csv_parse_turo_reservation_details()
-    create_excel_report()
+    #create_excel_report()
 
 
 '''

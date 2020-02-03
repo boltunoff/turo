@@ -17,6 +17,8 @@ headers = {
 'Host': 'turo.com',
 'Referer': 'https://turo.com/search'}
 
+# https://turo.com/search?airportCode=ORD&customDelivery=true&defaultZoomLevel=11&endDate=06%2F23%2F2019&endTime=11%3A00&
+# international=true&isMapSearch=false&itemsPerPage=200&location=ORD%20%E2%80%94%20Chicago%20O%E2%80%99Hare%20International%20Airport%2C%20Chicago%2C%20IL&locationType=Airport&maximumDistanceInMiles=30&sortType=RELEVANCE&startDate=06%2F20%2F2019&startTime=10%3A00
 
 # need two sets of parameters for Airport code search and for city
 # params for airportCode:
@@ -24,7 +26,7 @@ params = {
 'airportCode': 'ORD',
 'customDelivery': 'true',
 'defaultZoomLevel': '11',
-'endDate': '04/17/2019',
+'endDate': '06/17/2019',
 'endTime': '11:00',
 'international': 'true',
 'isMapSearch': 'false',
@@ -33,7 +35,7 @@ params = {
 'locationType': 'Airport',
 'maximumDistanceInMiles': '30',
 'sortType': 'RELEVANCE',
-'startDate': '04/15/2019',
+'startDate': '06/15/2019',
 'startTime': '10:00',
 'type': '1'
 }
@@ -49,12 +51,14 @@ response = requests.get(url, headers=headers, params=params)
 data = response.json()
 
 print(data)
+print(type(data))
+
 search_id = data['searchId']
-print (search_id)
+print(search_id)
 
 for ele in data['list']:
     link = ele['vehicle']['url']
-    print (base_url + link)
+    print(base_url + link)
 
 
 

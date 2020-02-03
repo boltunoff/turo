@@ -1,3 +1,7 @@
+
+# Turo analytics git:
+https://github.com/theriley106/turo_analytics
+
 # turo
 
 Turo Data Scrapping

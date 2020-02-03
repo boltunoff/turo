@@ -112,6 +112,9 @@ def parse_data():   # add argument url_now
     # I will grab all of the elements that are within "li" tags and are also members of class "u-baseBottomMargin"
     all_cars = soup.find_all('li', {'class': 'u-baseBottomMargin'})
 
+
+    # //*[@id="pageContainer-content"]/div[3]/div[3]/div[2]/div/div[2]).get_get
+
     #print "Example of the 1st element with text of HTML soup object:  \n", all_cars[0]
     #all_cars[0].span.get_text()
 
