@@ -70,9 +70,9 @@ def login(driver):
 
         # iFrame: its a separate html document within the main html. Need to swithch to iFrame context and find element within.
         driver.switch_to.frame(0)
-        # add config for email and password
-        driver.find_element_by_xpath("//input[@type='email']").send_keys('')
-        driver.find_element_by_xpath("//input[@type='password']").send_keys('')
+        # TODO: add config for email and password
+        driver.find_element_by_xpath("//input[@type='email']").send_keys('boltunoff@yahoo.com')
+        driver.find_element_by_xpath("//input[@type='password']").send_keys('Dip765')
         driver.find_element_by_xpath("//button[@type='submit']").click()
         driver.switch_to.parent_frame()
 
@@ -97,9 +97,23 @@ def login(driver):
         todays_date = datetime.datetime.today().strftime('%Y%m%d')
         file_name = f'earnings_export_{todays_date}.csv'
 
-        with open(downloads_path + '/' + file_name, 'r') as f:
-            print(f.readlines())
+        # with open(downloads_path + '/' + file_name, 'r') as f:
+        #     print(f.readlines())
 
+        import csv, sqlite3
+        con = sqlite3.connect('turo.db')
+        cur = con.cursor()
+        import pandas
+        df = pandas.read_csv(downloads_path + '/' + file_name)
+        df['file_date'] = datetime.datetime.today()
+        df["Vehicle ID"] = df["Vehicle ID"].fillna(0).astype(int)
+        # if_exists='replace' - trunc and reloads table
+        df.to_sql('raw_turo_transactions', con, if_exists='replace', index=False)
+
+
+
+        con.commit()
+        con.close()
 
     except Exception as e:
         driver.save_screenshot('error.png')
